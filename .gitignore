@@ -1,0 +1,21 @@
+node_modules
+.next
+out
+build
+.DS_Store
+*.pem
+npm-debug.log*
+.env
+.env*.local
+.vercel
+next-env.d.ts
+/prisma/*.db
+/prisma/migrations/dev.db*
+tsconfig.tsbuildinfo
+
+
+# Cloudflare / OpenNext build output
+.open-next/
+.wrangler/
+.dev.vars
+migrations/

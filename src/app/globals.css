@@ -1,0 +1,59 @@
+@import "tailwindcss";
+
+@theme {
+  /* Brand palette — organic greens + warm cream/earth */
+  --color-background: #fbfaf5;
+  --color-foreground: #1c2b1e;
+
+  --color-card: #ffffff;
+  --color-card-foreground: #1c2b1e;
+
+  --color-primary: #2f6b3c;          /* leaf green */
+  --color-primary-foreground: #f6faf4;
+  --color-secondary: #e8efe0;        /* soft sage */
+  --color-secondary-foreground: #2f4a30;
+
+  --color-muted: #eef1e8;
+  --color-muted-foreground: #647563;
+  --color-accent: #dbe9cf;
+  --color-accent-foreground: #2f4a30;
+
+  --color-destructive: #b3261e;
+  --color-destructive-foreground: #ffffff;
+
+  --color-border: #e3e6dc;
+  --color-input: #d9ddd0;
+  --color-ring: #2f6b3c;
+
+  --color-earth: #7a5c3e;
+  --color-harvest: #d98a2b;
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-fraunces), Georgia, serif;
+
+  --radius: 0.75rem;
+}
+
+* {
+  border-color: var(--color-border);
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+/* thin scrollbar for admin tables */
+.scrollbar-thin::-webkit-scrollbar { height: 6px; width: 6px; }
+.scrollbar-thin::-webkit-scrollbar-thumb { background: var(--color-input); border-radius: 9999px; }
+
+/* subtle grain / leaf texture helper */
+.hero-overlay {
+  background: linear-gradient(180deg, rgba(20,40,22,0.55) 0%, rgba(20,40,22,0.35) 40%, rgba(20,40,22,0.7) 100%);
+}

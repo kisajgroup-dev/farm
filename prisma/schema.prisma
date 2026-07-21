@@ -1,0 +1,143 @@
+// Prisma schema for GreenRoots Organic Farm
+// Runs on Cloudflare D1 (SQLite-compatible) via the Prisma driver adapter.
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// Admin users (dashboard access). role: "ADMIN" | "SUPERADMIN"
+model Admin {
+  id           String   @id @default(cuid())
+  email        String   @unique // used as the login username
+  name         String
+  passwordHash String
+  role         String   @default("ADMIN")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+// Global website settings (single row, id = "singleton")
+model Setting {
+  id             String    @id @default("singleton")
+  comingSoonMode Boolean   @default(true)
+
+  siteTitle      String    @default("GreenRoots Organic Farm")
+  tagline        String    @default("Fresh organic vegetables, from our farm to your family.")
+  description    String    @default("A small organic farm in Kalmunai, Sri Lanka growing fresh vegetables the natural way.")
+  logoUrl        String?
+  backgroundUrl  String?
+  launchDate     DateTime?
+
+  whatsappNumber String    @default("+94770000000")
+  email          String    @default("hello@greenroots.lk")
+  addressText    String    @default("Palamunai, Kalmunai, Sri Lanka")
+  mapLat         Float     @default(7.4167)
+  mapLng         Float     @default(81.8167)
+
+  facebookUrl    String?
+  instagramUrl   String?
+  tiktokUrl      String?
+  youtubeUrl     String?
+
+  updatedAt      DateTime  @updatedAt
+}
+
+model Category {
+  id          String    @id @default(cuid())
+  name        String
+  slug        String    @unique
+  description String?
+  products    Product[]
+  createdAt   DateTime  @default(now())
+}
+
+model Product {
+  id           String      @id @default(cuid())
+  name         String
+  slug         String      @unique
+  description  String?
+  imageUrl     String?
+  price        Float       @default(0)
+  unit         String      @default("KG") // KG | PACK | BUNCH | PIECE | GRAM | LITRE
+  quantity     Float       @default(0)
+  available    Boolean     @default(true)
+  featured     Boolean     @default(false)
+
+  categoryId   String?
+  category     Category?   @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+
+  orderItems   OrderItem[]
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  @@index([available])
+  @@index([featured])
+}
+
+// Orders. status: "PENDING" | "CONFIRMED" | "DELIVERED" | "CANCELLED"
+model Order {
+  id               String      @id @default(cuid())
+  customerName     String?
+  customerPhone    String?
+  deliveryLocation String?
+  note             String?
+  total            Float       @default(0)
+  status           String      @default("PENDING")
+  items            OrderItem[]
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+
+  @@index([status])
+}
+
+model OrderItem {
+  id        String   @id @default(cuid())
+  orderId   String
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId String?
+  product   Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+  name      String
+  unit      String
+  quantity  Float
+  price     Float
+}
+
+model BlogPost {
+  id          String    @id @default(cuid())
+  title       String
+  slug        String    @unique
+  excerpt     String?
+  content     String
+  coverUrl    String?
+  published   Boolean   @default(false)
+  publishedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([published])
+}
+
+model GalleryImage {
+  id        String   @id @default(cuid())
+  title     String?
+  imageUrl  String
+  category  String   @default("farm") // rooftop | farm | harvest
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+}
+
+model Inquiry {
+  id        String   @id @default(cuid())
+  name      String
+  phone     String?
+  email     String?
+  message   String
+  handled   Boolean  @default(false)
+  createdAt DateTime @default(now())
+}

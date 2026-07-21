@@ -1,0 +1,40 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "greenroots-organic-farm",
+	"main": ".open-next/worker.js",
+	"compatibility_date": "2026-07-20",
+	"compatibility_flags": [
+		"nodejs_compat"
+	],
+	"assets": {
+		"directory": ".open-next/assets",
+		"binding": "ASSETS"
+	},
+	"observability": {
+		"enabled": true
+	},
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "greenroots-db",
+			"database_id": "REPLACE_WITH_YOUR_D1_DATABASE_ID"
+		},
+		{
+			"binding": "greenroots_db",
+			"database_name": "greenroots-db",
+			"database_id": "d3965fb1-045f-46ca-a375-5ca256e7c6db",
+			"remote": true
+		}
+	],
+	"r2_buckets": [
+		{
+			"binding": "BUCKET",
+			"bucket_name": "greenroots-uploads"
+		},
+		{
+			"bucket_name": "greenroots-uploads",
+			"binding": "greenroots_uploads",
+			"remote": true
+		}
+	]
+}

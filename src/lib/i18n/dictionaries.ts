@@ -1,0 +1,96 @@
+export type Locale = "en" | "ta" | "si";
+
+export const LOCALES: { code: Locale; label: string; native: string }[] = [
+  { code: "en", label: "English", native: "English" },
+  { code: "ta", label: "Tamil", native: "தமிழ்" },
+  { code: "si", label: "Sinhala", native: "සිංහල" },
+];
+
+export const DEFAULT_LOCALE: Locale = "en";
+
+// Keep keys identical across all locales.
+export const dictionaries = {
+  en: {
+    nav: { home: "Home", about: "About", products: "Products", gallery: "Gallery", blog: "Updates", contact: "Contact", shopNow: "Shop Now" },
+    comingSoon: {
+      badge: "Coming Soon",
+      heroTitle: "Fresh organic farming is coming soon",
+      heroSubtitle: "Growing fresh vegetables naturally, from our farm to your family.",
+      notify: "Get notified on WhatsApp",
+      launchIn: "Launching in",
+      days: "Days", hours: "Hours", minutes: "Minutes", seconds: "Seconds",
+      storyTitle: "Our Story",
+      storyBody: "We are a small family starting an organic farm in Kalmunai. Our journey begins with a rooftop garden at home and a small plot of land in Palamunai, where we grow vegetables the natural way — no harmful chemicals, just healthy soil and care.",
+      visionTitle: "Our Farming Vision",
+      visionBody: "To make fresh, chemical-free vegetables affordable and accessible to every family in our community, while farming in a way that respects the land.",
+      rooftopTitle: "Rooftop Garden",
+      rooftopBody: "Our home rooftop is being transformed into a productive garden — raised beds, herbs, and fast-growing greens harvested fresh, steps from where they're packed.",
+      farmTitle: "Palamunai Farm Project",
+      farmBody: "A small plot of land in Palamunai is being prepared for open-field vegetable farming, using natural compost and organic methods for a bigger, seasonal harvest.",
+      productsTitle: "Future Products",
+      productsBody: "Fresh tomatoes, green chilli, brinjal, leafy greens, okra and more — harvested to order and delivered fresh.",
+      contactTitle: "Get in touch",
+      contactBody: "Have a question or want to be first to order? Message us on WhatsApp.",
+      locationTitle: "Where we grow",
+      followUs: "Follow our journey",
+      rightsReserved: "All rights reserved.",
+    },
+    product: { order: "Order via WhatsApp", inStock: "In stock", outOfStock: "Sold out", from: "from" },
+  },
+  ta: {
+    nav: { home: "முகப்பு", about: "எங்களைப் பற்றி", products: "பொருட்கள்", gallery: "படத்தொகுப்பு", blog: "புதுப்பிப்புகள்", contact: "தொடர்பு", shopNow: "இப்போது வாங்குங்கள்" },
+    comingSoon: {
+      badge: "விரைவில்",
+      heroTitle: "புதிய இயற்கை விவசாயம் விரைவில் வருகிறது",
+      heroSubtitle: "எங்கள் பண்ணையிலிருந்து உங்கள் குடும்பத்திற்கு, இயற்கையாக வளர்க்கப்பட்ட புதிய காய்கறிகள்.",
+      notify: "வாட்ஸ்அப்பில் அறிவிப்பு பெறுங்கள்",
+      launchIn: "தொடங்க இன்னும்",
+      days: "நாட்கள்", hours: "மணி", minutes: "நிமிடம்", seconds: "வினாடி",
+      storyTitle: "எங்கள் கதை",
+      storyBody: "நாங்கள் கல்முனையில் ஒரு இயற்கை பண்ணையைத் தொடங்கும் ஒரு சிறிய குடும்பம். வீட்டு மேற்கூரை தோட்டத்திலும், பாலமுனையில் ஒரு சிறிய நிலத்திலும் இரசாயனங்கள் இல்லாமல் இயற்கையாக காய்கறிகள் வளர்க்கிறோம்.",
+      visionTitle: "எங்கள் விவசாய நோக்கம்",
+      visionBody: "நிலத்தை மதிக்கும் வகையில் விவசாயம் செய்து, ஒவ்வொரு குடும்பத்திற்கும் புதிய, இரசாயனமற்ற காய்கறிகளை மலிவாக வழங்குவதே எங்கள் நோக்கம்.",
+      rooftopTitle: "மேற்கூரை தோட்டம்",
+      rooftopBody: "எங்கள் வீட்டு மேற்கூரை ஒரு உற்பத்தித் தோட்டமாக மாற்றப்படுகிறது — உயர்த்தப்பட்ட படுக்கைகள், மூலிகைகள் மற்றும் புதிய இலைக் காய்கறிகள்.",
+      farmTitle: "பாலமுனை பண்ணைத் திட்டம்",
+      farmBody: "பாலமுனையில் ஒரு சிறிய நிலம் இயற்கை உரம் மற்றும் இயற்கை முறைகளைப் பயன்படுத்தி திறந்தவெளி விவசாயத்திற்குத் தயாராகிறது.",
+      productsTitle: "வரவிருக்கும் பொருட்கள்",
+      productsBody: "புதிய தக்காளி, பச்சை மிளகாய், கத்தரிக்காய், இலைக் காய்கறிகள், வெண்டைக்காய் மற்றும் பல.",
+      contactTitle: "எங்களை தொடர்பு கொள்ளுங்கள்",
+      contactBody: "கேள்வி உள்ளதா? வாட்ஸ்அப்பில் எங்களுக்கு செய்தி அனுப்புங்கள்.",
+      locationTitle: "நாங்கள் வளர்க்கும் இடம்",
+      followUs: "எங்கள் பயணத்தைப் பின்தொடருங்கள்",
+      rightsReserved: "அனைத்து உரிமைகளும் பாதுகாக்கப்பட்டவை.",
+    },
+    product: { order: "வாட்ஸ்அப் மூலம் ஆர்டர் செய்யுங்கள்", inStock: "கையிருப்பில்", outOfStock: "விற்றுத் தீர்ந்தது", from: "முதல்" },
+  },
+  si: {
+    nav: { home: "මුල් පිටුව", about: "අප ගැන", products: "නිෂ්පාදන", gallery: "ගැලරිය", blog: "යාවත්කාලීන", contact: "සම්බන්ධ වන්න", shopNow: "දැන් මිලදී ගන්න" },
+    comingSoon: {
+      badge: "ඉක්මනින්",
+      heroTitle: "නැවුම් කාබනික ගොවිතැන ඉක්මනින්",
+      heroSubtitle: "අපගේ ගොවිපොළේ සිට ඔබේ පවුලට, ස්වභාවිකව වගා කළ නැවුම් එළවළු.",
+      notify: "WhatsApp හරහා දැනුම් ගන්න",
+      launchIn: "දියත් වීමට තව",
+      days: "දින", hours: "පැය", minutes: "මිනිත්තු", seconds: "තත්පර",
+      storyTitle: "අපගේ කතාව",
+      storyBody: "අපි කල්මුනේ කුඩා කාබනික ගොවිපොළක් ආරම්භ කරන කුඩා පවුලකි. නිවසේ වහල උද්‍යානයකින් සහ පලමුනේ කුඩා ඉඩමකින් අපි රසායනික නොමැතිව ස්වභාවිකව එළවළු වගා කරමු.",
+      visionTitle: "අපගේ ගොවිතැන් දැක්ම",
+      visionBody: "පොළොවට ගරු කරන ආකාරයෙන් ගොවිතැන් කරමින්, සෑම පවුලකටම නැවුම්, රසායනික නොවන එළවළු දැරිය හැකි මිලකට ලබා දීම.",
+      rooftopTitle: "වහල උද්‍යානය",
+      rooftopBody: "අපගේ නිවසේ වහලය ඵලදායී උද්‍යානයක් බවට පත් වෙමින් පවතී — උස් පාත්ති, ඖෂධ පැළෑටි සහ නැවුම් කොළ එළවළු.",
+      farmTitle: "පලමුනේ ගොවිපොළ ව්‍යාපෘතිය",
+      farmBody: "පලමුනේ කුඩා ඉඩමක් ස්වභාවික පොහොර සහ කාබනික ක්‍රම භාවිතා කරමින් විවෘත ක්ෂේත්‍ර ගොවිතැන සඳහා සූදානම් වෙමින් පවතී.",
+      productsTitle: "අනාගත නිෂ්පාදන",
+      productsBody: "නැවුම් තක්කාලි, අමු මිරිස්, වම්බටු, කොළ එළවළු, බණ්ඩක්කා සහ තවත්.",
+      contactTitle: "අප හා සම්බන්ධ වන්න",
+      contactBody: "ප්‍රශ්නයක් තිබේද? WhatsApp හරහා අපට පණිවිඩයක් එවන්න.",
+      locationTitle: "අප වගා කරන ස්ථානය",
+      followUs: "අපගේ ගමන අනුගමනය කරන්න",
+      rightsReserved: "සියලුම හිමිකම් ඇවිරිණි.",
+    },
+    product: { order: "WhatsApp හරහා ඇණවුම් කරන්න", inStock: "තොගයේ ඇත", outOfStock: "අවසන්", from: "සිට" },
+  },
+};
+
+export type Dictionary = (typeof dictionaries)["en"];
