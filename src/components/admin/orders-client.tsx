@@ -10,7 +10,7 @@ type OrderStatus = "PENDING" | "CONFIRMED" | "DELIVERED" | "CANCELLED";
 
 const STATUSES: OrderStatus[] = ["PENDING", "CONFIRMED", "DELIVERED", "CANCELLED"];
 
-export function OrderRow({ order }: { order: { id: string; date: string; customer: string; items: string; status: OrderStatus } }) {
+export function OrderRow({ order }: { order: { id: string; date: string; customer: string; items: string; status: string } }) {
   const [pending, start] = useTransition();
   return (
     <TR>
@@ -19,7 +19,7 @@ export function OrderRow({ order }: { order: { id: string; date: string; custome
       <TD className="max-w-xs text-sm">{order.items}</TD>
       <TD>
         <Select
-          value={order.status}
+          value={order.status as OrderStatus}
           disabled={pending}
           onChange={(e) => start(() => updateOrderStatus(order.id, e.target.value as OrderStatus))}
           className="h-9 w-36"
