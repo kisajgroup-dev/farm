@@ -17,7 +17,7 @@
 		{
 			"binding": "DB",
 			"database_name": "greenroots-db",
-			"database_id": "REPLACE_WITH_YOUR_D1_DATABASE_ID"
+			"database_id": "d3965fb1-045f-46ca-a375-5ca256e7c6db"
 		},
 		{
 			"binding": "greenroots_db",
