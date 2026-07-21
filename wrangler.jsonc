@@ -1,6 +1,6 @@
 {
 	"$schema": "node_modules/wrangler/config-schema.json",
-	"name": "greenroots-organic-farm",
+	"name": "farm",
 	"main": ".open-next/worker.js",
 	"compatibility_date": "2026-07-20",
 	"compatibility_flags": [
