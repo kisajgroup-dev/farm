@@ -1,6 +1,6 @@
 # Deploying GreenRoots to Vercel
 
-This project runs on Vercel with Neon Postgres and Vercel Blob. The domain registrar and DNS can remain at Hostinger. Prisma is generated with the Vercel-compatible Linux query engine during each build.
+This project runs on Vercel with Neon Postgres and Vercel Blob. The domain registrar and DNS can remain at Hostinger. Prisma connects through Neon’s pooled Postgres URL and is generated with the Vercel-compatible Linux query engine during each build.
 
 ## 1. Create the services
 
