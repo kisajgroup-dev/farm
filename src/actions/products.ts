@@ -63,6 +63,8 @@ export async function deleteProduct(id: string) {
   await prisma.product.delete({ where: { id } });
   revalidatePath("/admin/products");
   revalidatePath("/", "layout");
+  revalidatePath("/admin/products");
+  revalidatePath("/", "layout");
 }
 
 export async function updateStock(id: string, quantity: number, available: boolean) {
@@ -71,4 +73,39 @@ export async function updateStock(id: string, quantity: number, available: boole
   await prisma.product.update({ where: { id }, data: { quantity, available } });
   revalidatePath("/admin/inventory");
   revalidatePath("/", "layout");
+}
+
+export async function createCategory(_prev: unknown, formData: FormData) {
+  await requireAdmin();
+  const name = (formData.get("name") as string | null)?.trim();
+  const description = (formData.get("description") as string | null)?.trim() || null;
+  if (!name) return { ok: false, error: "Category name is required" };
+
+  try {
+    const prisma = await getDb();
+    const slug = slugify(name);
+    await prisma.category.upsert({
+      where: { slug },
+      update: { name, description },
+      create: { name, slug, description },
+    });
+    revalidatePath("/admin/products");
+    revalidatePath("/", "layout");
+    return { ok: true, error: null };
+  } catch (err: any) {
+    return { ok: false, error: err?.message || "Could not create category" };
+  }
+}
+
+export async function deleteCategory(id: string) {
+  await requireAdmin();
+  try {
+    const prisma = await getDb();
+    await prisma.category.delete({ where: { id } });
+    revalidatePath("/admin/products");
+    revalidatePath("/", "layout");
+    return { ok: true, error: null };
+  } catch (err: any) {
+    return { ok: false, error: err?.message || "Could not delete category" };
+  }
 }

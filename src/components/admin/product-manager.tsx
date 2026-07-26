@@ -2,8 +2,8 @@
 
 import { useActionState, useState, useTransition, useEffect } from "react";
 import Image from "next/image";
-import { Plus, Pencil, Trash2, X } from "lucide-react";
-import { saveProduct, deleteProduct } from "@/actions/products";
+import { Plus, Pencil, Trash2, X, Tag } from "lucide-react";
+import { saveProduct, deleteProduct, createCategory, deleteCategory } from "@/actions/products";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -19,26 +19,88 @@ interface P {
   price: number; unit: string; quantity: number; available: boolean; featured: boolean;
   categoryId: string | null; categoryName: string | null;
 }
-interface Cat { id: string; name: string }
+interface Cat { id: string; name: string; description?: string | null }
 const UNITS = ["KG", "PACK", "BUNCH", "PIECE", "GRAM", "LITRE"];
 
 export function ProductManager({ products, categories }: { products: P[]; categories: Cat[] }) {
   const [editing, setEditing] = useState<P | null>(null);
   const [showForm, setShowForm] = useState(false);
+  const [showCatModal, setShowCatModal] = useState(false);
+
   const [state, action, pending] = useActionState(saveProduct, { ok: false, error: null as string | null });
+  const [catState, catAction, catPending] = useActionState(createCategory, { ok: false, error: null as string | null });
   const [, startDelete] = useTransition();
 
   useEffect(() => { if (state.ok) { setShowForm(false); setEditing(null); } }, [state.ok]);
+  useEffect(() => { if (catState.ok) { setShowCatModal(false); } }, [catState.ok]);
 
   function openNew() { setEditing(null); setShowForm(true); }
   function openEdit(p: P) { setEditing(p); setShowForm(true); }
 
   return (
     <div className="space-y-4">
-      {!showForm && (
-        <Button onClick={openNew}><Plus className="h-4 w-4" /> Add product</Button>
+      <div className="flex flex-wrap items-center gap-3">
+        {!showForm && (
+          <Button onClick={openNew}><Plus className="h-4 w-4 mr-1" /> Add product</Button>
+        )}
+        <Button variant="outline" onClick={() => setShowCatModal(true)}>
+          <Tag className="h-4 w-4 mr-1" /> Manage Categories ({categories.length})
+        </Button>
+      </div>
+
+      {/* Category Management Modal/Card */}
+      {showCatModal && (
+        <Card className="border-primary/30 bg-card">
+          <CardContent className="pt-6">
+            <div className="mb-4 flex items-center justify-between">
+              <div>
+                <h3 className="font-display text-lg font-semibold">Manage Product Categories</h3>
+                <p className="text-xs text-muted-foreground">Add or delete categories for your products</p>
+              </div>
+              <button onClick={() => setShowCatModal(false)} className="text-muted-foreground hover:text-foreground">
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            <form action={catAction} className="mb-6 flex flex-col sm:flex-row gap-3">
+              <div className="flex-1">
+                <Input name="name" placeholder="Category name (e.g., Vegetables, Fruits)" required />
+              </div>
+              <div className="flex-1">
+                <Input name="description" placeholder="Description (optional)" />
+              </div>
+              <Button type="submit" disabled={catPending}>
+                {catPending ? "Adding..." : "Add Category"}
+              </Button>
+            </form>
+            {catState.error && <p className="mb-4 text-xs text-destructive">{catState.error}</p>}
+
+            <div className="flex flex-wrap gap-2 pt-2 border-t">
+              {categories.length === 0 && (
+                <p className="text-sm text-muted-foreground">No categories defined yet.</p>
+              )}
+              {categories.map((c) => (
+                <Badge key={c.id} variant="secondary" className="px-3 py-1.5 text-sm flex items-center gap-2">
+                  <span>{c.name}</span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (confirm(`Delete category "${c.name}"?`)) {
+                        startDelete(async () => { await deleteCategory(c.id); });
+                      }
+                    }}
+                    className="text-muted-foreground hover:text-destructive transition-colors"
+                  >
+                    <X className="h-3.5 w-3.5" />
+                  </button>
+                </Badge>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
       )}
 
+      {/* Product Add/Edit Form */}
       {showForm && (
         <Card>
           <CardContent className="pt-6">
@@ -103,6 +165,7 @@ export function ProductManager({ products, categories }: { products: P[]; catego
         </Card>
       )}
 
+      {/* Products Table */}
       <Card>
         <CardContent className="p-0">
           <Table>
