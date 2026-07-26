@@ -29,8 +29,9 @@ export async function loginAction(_prev: unknown, formData: FormData) {
     await createSession({ sub: admin.id, email: admin.email, name: admin.name, role: admin.role });
     const from = formData.get("from");
     if (typeof from === "string" && from.startsWith("/admin")) redirectTo = from;
-  } catch {
-    return { error: "Login failed. Is the database configured?" };
+  } catch (err: any) {
+    console.error("Login action error:", err);
+    return { error: `Login error: ${err?.message || String(err)}` };
   }
   redirect(redirectTo);
 }

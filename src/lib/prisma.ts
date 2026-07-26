@@ -24,19 +24,25 @@ export async function getDb(): Promise<PrismaClient> {
 }
 
 export const prisma = new Proxy({} as PrismaClient, {
-  get(_target, prop: string) {
+  get(_target, prop: string | symbol) {
+    if (typeof prop === "symbol" || prop === "then" || prop === "toJSON" || prop === "$$typeof") {
+      return undefined;
+    }
     return new Proxy({}, {
-      get(_modelTarget, method: string) {
+      get(_modelTarget, method: string | symbol) {
+        if (typeof method === "symbol" || method === "then" || method === "toJSON" || method === "$$typeof") {
+          return undefined;
+        }
         return async (...args: any[]) => {
           const db = await getDb();
-          const targetProp = (db as any)[prop];
-          if (typeof targetProp === "function") {
-            return targetProp.bind(db)(...args);
+          const targetObj = (db as any)[prop];
+          if (typeof targetObj === "function") {
+            return targetObj.bind(db)(...args);
           }
-          if (targetProp && typeof targetProp[method] === "function") {
-            return targetProp[method](...args);
+          if (targetObj && typeof targetObj[method] === "function") {
+            return targetObj[method].bind(targetObj)(...args);
           }
-          throw new Error(`Property ${prop}.${method} not found on PrismaClient`);
+          throw new Error(`Method ${String(prop)}.${String(method)} not found on PrismaClient`);
         };
       },
     });
