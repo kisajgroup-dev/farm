@@ -1,69 +1,40 @@
-# 🌱 GreenRoots — Organic Farm Platform
+# GreenRoots Organic Farm
 
-A production-ready, scalable web platform for a small organic farming business in Kalmunai, Sri Lanka.
-It ships in **two phases controlled from one admin toggle** — no rebuild required:
+A Next.js platform for a small organic farming business in Kalmunai, Sri Lanka. It has a public Coming Soon / shop experience and a protected admin portal for products, settings, inventory, blog posts, and inquiries.
 
-- **Phase 1 — Coming Soon:** a premium landing page while the farm is being prepared.
-- **Phase 2 — Full shop:** home, products, gallery, blog, contact + WhatsApp ordering.
+## Stack
 
-Flip **Coming Soon Mode** ON/OFF in the Admin Portal to switch between them.
+Next.js 15 · TypeScript · Tailwind CSS · Prisma · Neon Postgres · Vercel Blob · jose · Zod
 
-> **Deploying to Cloudflare?** Follow **[CLOUDFLARE-DEPLOY.md](./CLOUDFLARE-DEPLOY.md)** — a step-by-step
-> GitHub → Cloudflare guide. This app is configured for Cloudflare Workers (via OpenNext) with
-> **D1** (database) and **R2** (image uploads).
+## Deploy to Vercel
 
----
+This project is prepared for Vercel. Full setup instructions, including the Hostinger DNS record for `farm.kindredgrp.com`, are in [VERCEL-DEPLOY.md](./VERCEL-DEPLOY.md).
 
-## ✨ Features
+In brief:
 
-- **Website mode control** — one switch: Coming Soon page ↔ full e-commerce site.
-- **Premium Coming Soon page** — hero + countdown, story, vision, rooftop & Palamunai projects, future products, WhatsApp CTA, location map, socials. Animated with Framer Motion.
-- **WhatsApp ordering** — customers pick a product + quantity and a pre-filled order message opens in WhatsApp.
-- **Admin Portal** — dashboard, website settings, product management, inventory, orders & inquiries, blog.
-- **3 languages** — English (default), Tamil, Sinhala, switchable live.
-- **Secure admin auth** — hashed passwords (bcrypt) + signed JWT session cookie + middleware-protected routes.
-- **Mobile-first** responsive design, SEO metadata.
+1. Import this repository into Vercel.
+2. Connect a Neon Postgres database and a Vercel Blob store.
+3. Configure `DATABASE_URL`, `BLOB_READ_WRITE_TOKEN`, `AUTH_SECRET`, `BOOTSTRAP_TOKEN`, and the initial admin values in Vercel.
+4. Run `npm run db:push` with `DATABASE_URL` in your local `.env`.
+5. Deploy, call `/api/bootstrap?token=...` once, then add the `farm.kindredgrp.com` custom domain in Vercel.
 
-## 🧰 Tech Stack
+Your domain can remain at Hostinger. Vercel gives you a CNAME target; create the `farm` CNAME record in Hostinger’s DNS Zone Editor.
 
-Next.js 15 (App Router) · TypeScript · Tailwind CSS v4 · shadcn-style UI · Framer Motion · Prisma + Cloudflare D1 · R2 storage · OpenNext · jose (JWT) · Zod.
-
----
-
-## 🚀 Deploy
-
-Full instructions are in **[CLOUDFLARE-DEPLOY.md](./CLOUDFLARE-DEPLOY.md)**. In short:
-
-1. `npx wrangler login`, then create a D1 database and an R2 bucket.
-2. Put the D1 `database_id` into `wrangler.jsonc`.
-3. `npm run d1:sql > schema.sql` and apply it with `wrangler d1 execute … --remote --file=schema.sql`.
-4. Push to GitHub, connect the repo in Cloudflare (build command `npx opennextjs-cloudflare build`), add your secrets.
-5. Visit `/api/bootstrap?token=…` once to seed, then log in at `/admin`.
-
-The site starts in **Coming Soon mode**; toggle it **OFF** in Website Settings to reveal the full shop.
-
----
-
-## 💻 Run locally (optional)
+## Local development
 
 ```bash
 npm install
-npx wrangler d1 execute greenroots-db --local --file=schema.sql   # after generating schema.sql
+cp .env.example .env
+# Set DATABASE_URL and BLOB_READ_WRITE_TOKEN in .env
+npm run db:push
 npm run dev
 ```
-Then seed the local DB by visiting `http://localhost:3000/api/bootstrap?token=<BOOTSTRAP_TOKEN from .env>`
-and log in at `http://localhost:3000/admin`.
 
----
+Then initialize data with `http://localhost:3000/api/bootstrap?token=YOUR_BOOTSTRAP_TOKEN` and sign in at `/admin`.
 
+## Important first changes
 
-## 🗂 Project structure
-
-See [`ARCHITECTURE.md`](./ARCHITECTURE.md) for the full breakdown of folders, database design, and how the mode switch works.
-
-## 🔐 First things to change
-
-1. Admin password (log in, or reseed with a new `ADMIN_PASSWORD`).
-2. `AUTH_SECRET` in production.
-3. Site title, WhatsApp number, socials and map coordinates in **Admin → Website Settings**.
-4. Replace the sample Unsplash images with your own farm photos.
+1. Use a unique strong `AUTH_SECRET` and `BOOTSTRAP_TOKEN` in Vercel.
+2. Use a strong `ADMIN_PASSWORD` for the initial seed.
+3. Change site branding, contact details, and social links in **Admin → Website Settings**.
+4. Upload your own farm images from the admin portal.

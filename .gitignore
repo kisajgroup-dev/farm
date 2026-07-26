@@ -13,9 +13,6 @@ next-env.d.ts
 /prisma/migrations/dev.db*
 tsconfig.tsbuildinfo
 
-
-# Cloudflare / OpenNext build output
 .open-next/
 .wrangler/
-.dev.vars
-migrations/
+

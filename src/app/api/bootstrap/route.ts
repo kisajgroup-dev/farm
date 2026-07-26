@@ -1,25 +1,20 @@
 import { NextResponse } from "next/server";
 import { getDb } from "@/lib/prisma";
 import { hashPassword } from "@/lib/auth";
-import { getCloudflareContext } from "@opennextjs/cloudflare";
 
-export const runtime = "nodejs";
-
-// One-time database seeding for Cloudflare D1.
+// One-time database seed for the Vercel-connected Postgres database.
 // Call once after deploy:  https://<your-site>/api/bootstrap?token=YOUR_BOOTSTRAP_TOKEN
 // Idempotent: safe to run more than once. Rotate/remove the token afterwards.
 export async function GET(request: Request) {
-  const { env } = await getCloudflareContext<CloudflareEnv>({ async: true });
-
   const token = new URL(request.url).searchParams.get("token");
-  if (!token || token !== env.BOOTSTRAP_TOKEN) {
+  if (!token || token !== process.env.BOOTSTRAP_TOKEN) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   const prisma = await getDb();
-  const email = env.ADMIN_EMAIL || "admin";
-  const password = env.ADMIN_PASSWORD || "Kindred123";
-  const name = env.ADMIN_NAME || "Farm Admin";
+  const email = process.env.ADMIN_EMAIL || "admin";
+  const password = process.env.ADMIN_PASSWORD || "Kindred123";
+  const name = process.env.ADMIN_NAME || "Farm Admin";
   const passwordHash = await hashPassword(password);
 
   await prisma.admin.upsert({

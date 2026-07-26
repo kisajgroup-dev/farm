@@ -55,12 +55,11 @@ prisma/
 └─ seed.ts                  # admin + settings + sample data
 ```
 
-## 3. Database design (Prisma / Cloudflare D1)
+## 3. Database design (Prisma / Neon Postgres)
 
-> Runs on **Cloudflare D1** (SQLite-compatible) via the Prisma driver adapter. The DB client is
-> created per-request in `src/lib/prisma.ts` using `getCloudflareContext()`. Uploaded images are
-> stored in **Cloudflare R2** (`/api/upload` writes, `/api/files/[...path]` serves). Enum-like
-> fields (role, unit, order status) are stored as strings since D1/SQLite has no enum type.
+> Runs on **Neon Postgres** through Prisma's Neon serverless adapter. Uploaded images are stored
+> in **Vercel Blob** (`/api/upload` writes public Blob URLs). The legacy `/api/files/[...path]`
+> endpoint redirects matching migrated Blob objects so existing database URLs can keep working.
 
 | Model         | Purpose |
 |---------------|---------|

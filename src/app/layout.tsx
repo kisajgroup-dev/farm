@@ -4,8 +4,7 @@ import { LanguageProvider } from "@/components/providers/language-provider";
 import { getSettings } from "@/lib/settings";
 import "./globals.css";
 
-// Site metadata comes from D1, which is available in the Worker request
-// context rather than during the build's static-generation phase.
+// Site metadata comes from Postgres and must be read at request time.
 export const dynamic = "force-dynamic";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });

@@ -1,20 +1,13 @@
-import { getCloudflareContext } from "@opennextjs/cloudflare";
+import { list } from "@vercel/blob";
 
-export const runtime = "nodejs";
-
-// Serves images stored in the R2 bucket, e.g. /api/files/uploads/logo-abc.png
+// Compatibility redirect for image URLs saved before the Vercel Blob migration.
 export async function GET(_request: Request, { params }: { params: Promise<{ path: string[] }> }) {
   const { path } = await params;
   const key = path.join("/");
 
-  const { env } = getCloudflareContext();
-  const object = await env.BUCKET.get(key);
-  if (!object) return new Response("Not found", { status: 404 });
+  const { blobs } = await list({ prefix: key, limit: 1 });
+  const blob = blobs.find((candidate) => candidate.pathname === key);
+  if (!blob) return new Response("Not found", { status: 404 });
 
-  const headers = new Headers();
-  headers.set("content-type", object.httpMetadata?.contentType || "application/octet-stream");
-  headers.set("cache-control", "public, max-age=31536000, immutable");
-  headers.set("etag", object.httpEtag);
-
-  return new Response(object.body, { headers });
+  return Response.redirect(blob.url, 307);
 }
