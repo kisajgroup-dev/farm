@@ -5,16 +5,20 @@ import { getCloudflareContext } from "@opennextjs/cloudflare";
 let cachedDb: PrismaClient | null = null;
 
 export async function getDb(): Promise<PrismaClient> {
-  let env: any;
+  let env: any = process.env;
   try {
     const cf = await getCloudflareContext({ async: true });
-    env = cf?.env;
+    if (cf?.env) {
+      env = { ...env, ...cf.env };
+    }
   } catch {
     env = (globalThis as any).__env__ || process.env;
   }
 
-  if (env && env.DB) {
-    return new PrismaClient({ adapter: new PrismaD1(env.DB) });
+  const d1Binding = env?.DB || env?.greenroots_db || (globalThis as any).__env__?.DB || (globalThis as any).__env__?.greenroots_db;
+
+  if (d1Binding) {
+    return new PrismaClient({ adapter: new PrismaD1(d1Binding) });
   }
 
   if (!cachedDb) {
