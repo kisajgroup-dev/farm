@@ -1,21 +1,45 @@
 import { PrismaClient } from "@prisma/client";
 import { PrismaD1 } from "@prisma/adapter-d1";
 import { getCloudflareContext } from "@opennextjs/cloudflare";
-import { cache } from "react";
 
-// One Prisma client per request, backed by the Cloudflare D1 binding.
-// `cache` keeps it to a single instance within the same request.
-export const getDb = cache(() => {
-  const { env } = getCloudflareContext();
-  return new PrismaClient({ adapter: new PrismaD1(env.DB) });
-});
+let cachedDb: PrismaClient | null = null;
 
-// Backwards-compatible accessor: existing code does `prisma.product.findMany()`.
-// This proxy resolves the real client lazily, at property-access time, so it
-// only touches the Cloudflare context inside a request (where it's available).
+export async function getDb(): Promise<PrismaClient> {
+  let env: any;
+  try {
+    const cf = await getCloudflareContext({ async: true });
+    env = cf?.env;
+  } catch {
+    env = (globalThis as any).__env__ || process.env;
+  }
+
+  if (env && env.DB) {
+    return new PrismaClient({ adapter: new PrismaD1(env.DB) });
+  }
+
+  if (!cachedDb) {
+    cachedDb = new PrismaClient();
+  }
+  return cachedDb;
+}
+
 export const prisma = new Proxy({} as PrismaClient, {
-  get(_target, prop) {
-    const client = getDb();
-    return client[prop as keyof PrismaClient];
+  get(_target, prop: string) {
+    return new Proxy({}, {
+      get(_modelTarget, method: string) {
+        return async (...args: any[]) => {
+          const db = await getDb();
+          const targetProp = (db as any)[prop];
+          if (typeof targetProp === "function") {
+            return targetProp.bind(db)(...args);
+          }
+          if (targetProp && typeof targetProp[method] === "function") {
+            return targetProp[method](...args);
+          }
+          throw new Error(`Property ${prop}.${method} not found on PrismaClient`);
+        };
+      },
+    });
   },
 });
+
