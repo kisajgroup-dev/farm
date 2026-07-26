@@ -1,9 +1,10 @@
-import { prisma } from "@/lib/prisma";
+import { getDb } from "@/lib/prisma";
 import { BlogManager } from "@/components/admin/blog-manager";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminBlogPage() {
+  const prisma = await getDb();
   const rows = await prisma.blogPost.findMany({ orderBy: { createdAt: "desc" } });
   const posts = rows.map((p) => ({
     id: p.id, title: p.title, excerpt: p.excerpt, content: p.content,

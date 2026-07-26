@@ -2,7 +2,7 @@
 
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
-import { prisma } from "@/lib/prisma";
+import { getDb } from "@/lib/prisma";
 import { getSession } from "@/lib/session";
 import { slugify } from "@/lib/utils";
 
@@ -43,6 +43,7 @@ export async function saveProduct(_prev: unknown, formData: FormData) {
   };
 
   try {
+    const prisma = await getDb();
     if (id) {
       await prisma.product.update({ where: { id }, data });
     } else {
@@ -58,6 +59,7 @@ export async function saveProduct(_prev: unknown, formData: FormData) {
 
 export async function deleteProduct(id: string) {
   await requireAdmin();
+  const prisma = await getDb();
   await prisma.product.delete({ where: { id } });
   revalidatePath("/admin/products");
   revalidatePath("/", "layout");
@@ -65,6 +67,7 @@ export async function deleteProduct(id: string) {
 
 export async function updateStock(id: string, quantity: number, available: boolean) {
   await requireAdmin();
+  const prisma = await getDb();
   await prisma.product.update({ where: { id }, data: { quantity, available } });
   revalidatePath("/admin/inventory");
   revalidatePath("/", "layout");

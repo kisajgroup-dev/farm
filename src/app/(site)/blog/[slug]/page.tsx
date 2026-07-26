@@ -1,12 +1,13 @@
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { prisma } from "@/lib/prisma";
+import { getDb } from "@/lib/prisma";
 import { format } from "date-fns";
 
 export const dynamic = "force-dynamic";
 
 export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
+  const prisma = await getDb();
   const post = await prisma.blogPost.findUnique({ where: { slug } });
   if (!post || !post.published) notFound();
 

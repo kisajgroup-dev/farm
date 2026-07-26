@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { prisma } from "@/lib/prisma";
+import { getDb } from "@/lib/prisma";
 import { getSettings } from "@/lib/settings";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -9,6 +9,7 @@ export const dynamic = "force-dynamic";
 
 export default async function DashboardPage() {
   const settings = await getSettings();
+  const prisma = await getDb();
   const [products, lowStock, pendingOrders, inquiries] = await Promise.all([
     prisma.product.count(),
     prisma.product.count({ where: { quantity: { lte: 5 } } }),

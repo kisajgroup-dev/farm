@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { prisma } from "@/lib/prisma";
+import { getDb } from "@/lib/prisma";
 
 export const metadata = { title: "Gallery" };
 export const dynamic = "force-dynamic";
@@ -7,6 +7,7 @@ export const dynamic = "force-dynamic";
 const LABELS: Record<string, string> = { rooftop: "Rooftop Garden", farm: "Farm Progress", harvest: "Harvest" };
 
 export default async function GalleryPage() {
+  const prisma = await getDb();
   const images = await prisma.galleryImage.findMany({ orderBy: { sortOrder: "asc" } });
 
   return (

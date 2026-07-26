@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import bcrypt from "bcryptjs";
 import { getDb } from "@/lib/prisma";
+import { hashPassword } from "@/lib/auth";
 import { getCloudflareContext } from "@opennextjs/cloudflare";
 
 export const runtime = "nodejs";
@@ -9,23 +9,18 @@ export const runtime = "nodejs";
 // Call once after deploy:  https://<your-site>/api/bootstrap?token=YOUR_BOOTSTRAP_TOKEN
 // Idempotent: safe to run more than once. Rotate/remove the token afterwards.
 export async function GET(request: Request) {
-  let env: any = process.env;
-  try {
-    const cf = await getCloudflareContext({ async: true });
-    if (cf?.env) env = { ...process.env, ...cf.env };
-  } catch {}
+  const { env } = await getCloudflareContext<CloudflareEnv>({ async: true });
 
   const token = new URL(request.url).searchParams.get("token");
-  const bootstrapToken = env.BOOTSTRAP_TOKEN || process.env.BOOTSTRAP_TOKEN;
-  if (!token || token !== bootstrapToken) {
+  if (!token || token !== env.BOOTSTRAP_TOKEN) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   const prisma = await getDb();
-  const email = env.ADMIN_EMAIL || process.env.ADMIN_EMAIL || "admin";
-  const password = env.ADMIN_PASSWORD || process.env.ADMIN_PASSWORD || "Kindred123";
-  const name = env.ADMIN_NAME || process.env.ADMIN_NAME || "Farm Admin";
-  const passwordHash = await bcrypt.hash(password, 10);
+  const email = env.ADMIN_EMAIL || "admin";
+  const password = env.ADMIN_PASSWORD || "Kindred123";
+  const name = env.ADMIN_NAME || "Farm Admin";
+  const passwordHash = await hashPassword(password);
 
   await prisma.admin.upsert({
     where: { email },

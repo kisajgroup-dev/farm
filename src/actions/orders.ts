@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { prisma } from "@/lib/prisma";
+import { getDb } from "@/lib/prisma";
 import { getSession } from "@/lib/session";
 type OrderStatus = "PENDING" | "CONFIRMED" | "DELIVERED" | "CANCELLED";
 
@@ -12,12 +12,14 @@ async function requireAdmin() {
 
 export async function updateOrderStatus(id: string, status: OrderStatus) {
   await requireAdmin();
+  const prisma = await getDb();
   await prisma.order.update({ where: { id }, data: { status } });
   revalidatePath("/admin/orders");
 }
 
 export async function markInquiry(id: string, handled: boolean) {
   await requireAdmin();
+  const prisma = await getDb();
   await prisma.inquiry.update({ where: { id }, data: { handled } });
   revalidatePath("/admin/orders");
 }

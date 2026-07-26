@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma";
+import { getDb } from "@/lib/prisma";
 import { cache } from "react";
 
 const DEFAULT_SETTINGS = {
@@ -30,6 +30,7 @@ export type SiteSettings = typeof DEFAULT_SETTINGS;
  */
 export const getSettings = cache(async (): Promise<SiteSettings> => {
   try {
+    const prisma = await getDb();
     const settings = await prisma.setting.findUnique({ where: { id: "singleton" } });
     if (!settings) return DEFAULT_SETTINGS;
     return settings as unknown as SiteSettings;

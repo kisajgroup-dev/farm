@@ -2,7 +2,7 @@
 
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
-import { prisma } from "@/lib/prisma";
+import { getDb } from "@/lib/prisma";
 import { getSession } from "@/lib/session";
 import { slugify } from "@/lib/utils";
 
@@ -27,6 +27,7 @@ export async function saveBlogPost(_prev: unknown, formData: FormData) {
   const d = parsed.data;
 
   try {
+    const prisma = await getDb();
     if (id) {
       await prisma.blogPost.update({
         where: { id },
@@ -55,6 +56,7 @@ export async function saveBlogPost(_prev: unknown, formData: FormData) {
 
 export async function deleteBlogPost(id: string) {
   await requireAdmin();
+  const prisma = await getDb();
   await prisma.blogPost.delete({ where: { id } });
   revalidatePath("/admin/blog");
   revalidatePath("/blog");

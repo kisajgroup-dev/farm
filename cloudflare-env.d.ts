@@ -3,6 +3,7 @@
 /// <reference types="@cloudflare/workers-types" />
 
 interface CloudflareEnv {
+  [key: string]: unknown;
   DB: D1Database;
   BUCKET: R2Bucket;
   ASSETS: Fetcher;

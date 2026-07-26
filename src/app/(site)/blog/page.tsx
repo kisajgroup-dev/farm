@@ -1,12 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
-import { prisma } from "@/lib/prisma";
+import { getDb } from "@/lib/prisma";
 import { format } from "date-fns";
 
 export const metadata = { title: "Updates" };
 export const dynamic = "force-dynamic";
 
 export default async function BlogPage() {
+  const prisma = await getDb();
   const posts = await prisma.blogPost.findMany({
     where: { published: true },
     orderBy: { publishedAt: "desc" },

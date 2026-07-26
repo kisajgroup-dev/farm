@@ -1,7 +1,7 @@
 "use server";
 
 import { z } from "zod";
-import { prisma } from "@/lib/prisma";
+import { getDb } from "@/lib/prisma";
 
 const schema = z.object({
   name: z.string().min(1, "Name is required").max(120),
@@ -21,6 +21,7 @@ export async function submitInquiry(_prev: unknown, formData: FormData) {
     return { ok: false, error: parsed.error.issues[0]?.message ?? "Invalid input" };
   }
   try {
+    const prisma = await getDb();
     await prisma.inquiry.create({
       data: {
         name: parsed.data.name,

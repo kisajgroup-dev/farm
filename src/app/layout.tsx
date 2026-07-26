@@ -4,6 +4,10 @@ import { LanguageProvider } from "@/components/providers/language-provider";
 import { getSettings } from "@/lib/settings";
 import "./globals.css";
 
+// Site metadata comes from D1, which is available in the Worker request
+// context rather than during the build's static-generation phase.
+export const dynamic = "force-dynamic";
+
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
 const fraunces = Fraunces({ subsets: ["latin"], variable: "--font-fraunces", display: "swap" });
 

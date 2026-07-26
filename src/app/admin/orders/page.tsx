@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma";
+import { getDb } from "@/lib/prisma";
 import { format } from "date-fns";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { OrderRow, InquiryRow } from "@/components/admin/orders-client";
@@ -7,6 +7,7 @@ import { Table, THead, TBody, TR, TH, TD } from "@/components/ui/table";
 export const dynamic = "force-dynamic";
 
 export default async function OrdersPage() {
+  const prisma = await getDb();
   const [orders, inquiries] = await Promise.all([
     prisma.order.findMany({ orderBy: { createdAt: "desc" }, include: { items: true }, take: 50 }),
     prisma.inquiry.findMany({ orderBy: { createdAt: "desc" }, take: 50 }),

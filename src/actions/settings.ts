@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { prisma } from "@/lib/prisma";
+import { getDb } from "@/lib/prisma";
 import { getSession } from "@/lib/session";
 
 async function requireAdmin() {
@@ -12,6 +12,7 @@ async function requireAdmin() {
 
 export async function toggleComingSoon(next: boolean) {
   await requireAdmin();
+  const prisma = await getDb();
   await prisma.setting.upsert({
     where: { id: "singleton" },
     update: { comingSoonMode: next },
@@ -33,6 +34,7 @@ export async function updateSettings(_prev: unknown, formData: FormData) {
   const launchRaw = str("launchDate");
 
   try {
+    const prisma = await getDb();
     await prisma.setting.upsert({
       where: { id: "singleton" },
       update: {

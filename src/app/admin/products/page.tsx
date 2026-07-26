@@ -1,9 +1,10 @@
-import { prisma } from "@/lib/prisma";
+import { getDb } from "@/lib/prisma";
 import { ProductManager } from "@/components/admin/product-manager";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminProductsPage() {
+  const prisma = await getDb();
   const [rows, categories] = await Promise.all([
     prisma.product.findMany({ orderBy: { createdAt: "desc" }, include: { category: true } }),
     prisma.category.findMany({ orderBy: { name: "asc" } }),

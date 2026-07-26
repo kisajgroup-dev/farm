@@ -1,5 +1,5 @@
 import { getSettings } from "@/lib/settings";
-import { prisma } from "@/lib/prisma";
+import { getDb } from "@/lib/prisma";
 import { ComingSoonPage } from "@/components/coming-soon/coming-soon-page";
 import { HomePage } from "@/components/site/home-page";
 
@@ -7,6 +7,7 @@ export const dynamic = "force-dynamic";
 
 export default async function RootPage() {
   const settings = await getSettings();
+  const prisma = await getDb();
 
   // Featured products (safe if DB is empty/unavailable)
   let featured: Awaited<ReturnType<typeof prisma.product.findMany>> = [];

@@ -1,9 +1,10 @@
-import { prisma } from "@/lib/prisma";
+import { getDb } from "@/lib/prisma";
 import { InventoryManager } from "@/components/admin/inventory-manager";
 
 export const dynamic = "force-dynamic";
 
 export default async function InventoryPage() {
+  const prisma = await getDb();
   const rows = await prisma.product.findMany({ orderBy: { name: "asc" } });
   const products = rows.map((p) => ({
     id: p.id, name: p.name, unit: p.unit, quantity: p.quantity, available: p.available,

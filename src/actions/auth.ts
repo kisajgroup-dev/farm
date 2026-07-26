@@ -2,7 +2,7 @@
 
 import { z } from "zod";
 import { redirect } from "next/navigation";
-import { prisma } from "@/lib/prisma";
+import { getDb } from "@/lib/prisma";
 import { verifyPassword } from "@/lib/auth";
 import { createSession, destroySession } from "@/lib/session";
 
@@ -20,6 +20,7 @@ export async function loginAction(_prev: unknown, formData: FormData) {
 
   let redirectTo = "/admin";
   try {
+    const prisma = await getDb();
     const admin = await prisma.admin.findUnique({ where: { email: parsed.data.username } });
     if (!admin) return { error: "Invalid username or password" };
 

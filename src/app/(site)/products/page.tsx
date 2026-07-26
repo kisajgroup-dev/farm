@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma";
+import { getDb } from "@/lib/prisma";
 import { getSettings } from "@/lib/settings";
 import { ProductsGrid } from "@/components/site/products-grid";
 import type { PublicProduct } from "@/types";
@@ -8,6 +8,7 @@ export const dynamic = "force-dynamic";
 
 export default async function ProductsPage() {
   const settings = await getSettings();
+  const prisma = await getDb();
   const rows = await prisma.product.findMany({
     where: { available: true },
     orderBy: [{ featured: "desc" }, { name: "asc" }],
