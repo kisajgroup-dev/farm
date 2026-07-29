@@ -28,7 +28,10 @@ export function AdminShell({ children, name }: { children: React.ReactNode; name
     <div className="min-h-screen bg-secondary/30">
       {/* Mobile top bar */}
       <div className="flex items-center justify-between border-b border-border bg-background px-4 py-3 lg:hidden">
-        <span className="flex items-center gap-2 font-display font-semibold"><Sprout className="h-5 w-5 text-primary" /> Admin</span>
+        <span className="flex items-center gap-2 font-display font-semibold">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/logo.png" alt="logo" className="h-6 w-6 rounded-full object-contain" /> Admin
+        </span>
         <button onClick={() => setOpen(!open)}>{open ? <X /> : <Menu />}</button>
       </div>
 
@@ -38,8 +41,9 @@ export function AdminShell({ children, name }: { children: React.ReactNode; name
           "w-full border-r border-border bg-background lg:sticky lg:top-0 lg:block lg:h-screen lg:w-64",
           open ? "block" : "hidden lg:block"
         )}>
-          <div className="hidden items-center gap-2 px-6 py-5 font-display text-lg font-semibold lg:flex">
-            <Sprout className="h-6 w-6 text-primary" /> Farm Admin
+          <div className="hidden items-center gap-2.5 px-6 py-5 font-display text-lg font-semibold lg:flex">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/logo.png" alt="logo" className="h-7 w-7 rounded-full object-contain" /> Farm Admin
           </div>
           <nav className="space-y-1 px-3 py-2">
             {NAV.map(({ href, label, Icon }) => {

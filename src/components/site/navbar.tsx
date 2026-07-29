@@ -24,13 +24,9 @@ export function Navbar({ settings }: { settings: SiteSettings }) {
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background/85 backdrop-blur-md">
       <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5">
-        <Link href="/" className="flex items-center gap-2 font-display text-lg font-semibold">
-          {settings.logoUrl ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={settings.logoUrl} alt={settings.siteTitle} className="h-8 w-8 rounded-full object-cover" />
-          ) : (
-            <Sprout className="h-6 w-6 text-primary" />
-          )}
+        <Link href="/" className="flex items-center gap-2.5 font-display text-lg font-semibold">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={settings.logoUrl || "/logo.png"} alt={settings.siteTitle} className="h-9 w-9 rounded-full object-contain" />
           {settings.siteTitle}
         </Link>
 

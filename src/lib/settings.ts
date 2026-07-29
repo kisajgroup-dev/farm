@@ -7,7 +7,7 @@ const DEFAULT_SETTINGS = {
   siteTitle: process.env.NEXT_PUBLIC_SITE_NAME || "GreenRoots Organic Farm",
   tagline: "Fresh organic vegetables, from our farm to your family.",
   description: "A small organic farm in Kalmunai, Sri Lanka.",
-  logoUrl: null as string | null,
+  logoUrl: "/logo.png" as string | null,
   backgroundUrl: null as string | null,
   launchDate: null as Date | null,
   whatsappNumber: "+94770000000",

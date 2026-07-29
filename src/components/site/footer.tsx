@@ -19,8 +19,10 @@ export function Footer({ settings }: { settings: SiteSettings }) {
     <footer className="mt-20 border-t border-border bg-secondary/40">
       <div className="mx-auto grid max-w-6xl gap-8 px-5 py-12 sm:grid-cols-3">
         <div>
-          <div className="flex items-center gap-2 font-display text-lg font-semibold">
-            <Sprout className="h-5 w-5 text-primary" /> {settings.siteTitle}
+          <div className="flex items-center gap-2.5 font-display text-lg font-semibold">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={settings.logoUrl || "/logo.png"} alt={settings.siteTitle} className="h-7 w-7 rounded-full object-contain" />
+            {settings.siteTitle}
           </div>
           <p className="mt-3 text-sm text-muted-foreground">{settings.tagline}</p>
         </div>

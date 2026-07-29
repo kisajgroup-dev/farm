@@ -73,13 +73,10 @@ export function ComingSoonPage({
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.7 }}
-            className="mb-6 flex h-20 w-20 items-center justify-center rounded-full border border-white/30 bg-white/10 backdrop-blur-md"
+            className="mb-6 flex h-24 w-24 items-center justify-center rounded-full border border-white/30 bg-white/20 p-3 backdrop-blur-md"
           >
-            {settings.logoUrl ? (
-              <Image src={settings.logoUrl} alt="logo" width={48} height={48} className="rounded-full object-cover" />
-            ) : (
-              <Sprout className="h-10 w-10 text-white" />
-            )}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={settings.logoUrl || "/logo.png"} alt="logo" className="h-16 w-16 rounded-full object-contain" />
           </motion.div>
 
           <motion.span
